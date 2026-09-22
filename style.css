@@ -16,7 +16,7 @@
   color-scheme: light dark;
 }
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #0f1622;
     --surface: #171f2d;
     --ink: #e8edf5;
@@ -30,6 +30,20 @@
     --ctrl: #48566e;
     --btn-ink: #0f1622;
   }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1622;
+  --surface: #171f2d;
+  --ink: #e8edf5;
+  --muted: #a3adbd;
+  --line: #2a3446;
+  --blue: #5b93f0;
+  --blue-ink: #8db3f5;
+  --tint: #1b2a44;
+  --navy: #0b1220;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
+  --ctrl: #48566e;
+  --btn-ink: #0f1622;
 }
 
 * { box-sizing: border-box; }
@@ -67,7 +81,9 @@ p { margin: 0; }
 .top { position: sticky; top: 0; z-index: 5; background: var(--bg); background: color-mix(in srgb, var(--bg) 88%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
 .top .wrap { display: flex; align-items: center; gap: 12px; height: 64px; }
 .brand { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-family: var(--font-display); font-weight: 700; font-size: 17px; letter-spacing: .02em; }
-.brand img { width: 26px; height: auto; }
+.brand svg { width: 26px; height: 37px; flex: none; }
+.mark-blue { fill: var(--blue); }
+.mark-ink { fill: var(--ink); }
 .nav { margin-left: auto; display: flex; gap: 4px; }
 .nav a { color: var(--ink); text-decoration: none; font-weight: 500; font-size: 15px; padding: 8px 12px; border-radius: 6px; }
 .nav a:hover { background: var(--tint); color: var(--blue-ink); }
@@ -145,6 +161,17 @@ p { margin: 0; }
 footer { padding-block: 32px 48px; color: var(--muted); font-size: 14px; }
 footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between; }
 footer a { color: var(--muted); }
+.theme { display: inline-flex; align-items: center; gap: 8px; }
+.theme span { font-size: 13px; }
+.theme-options { display: inline-flex; border: 1px solid var(--ctrl); border-radius: 8px; overflow: hidden; background: var(--surface); }
+.theme-options button {
+  appearance: none; border: 0; background: transparent; color: var(--muted); font: inherit; font-size: 13px; font-weight: 500;
+  padding: 6px 12px; cursor: pointer; line-height: 1.4;
+}
+.theme-options button + button { border-left: 1px solid var(--ctrl); }
+.theme-options button:hover { color: var(--ink); }
+.theme-options button[aria-pressed="true"] { background: var(--tint); color: var(--blue-ink); font-weight: 600; }
+.theme-options button:focus-visible { outline-offset: -3px; }
 
 @media (max-width: 720px) {
   html { scroll-padding-top: 8px; }
