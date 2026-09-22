@@ -21,6 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<script>(function(){try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark"){document.documentElement.setAttribute("data-theme",t);}}catch(e){}})();</script>
 <link rel="stylesheet" href="style.css">
 <script type="application/ld+json">
 {
@@ -43,7 +44,7 @@
 
 <header class="top">
   <div class="wrap">
-    <a class="brand" href="#top" aria-label="Ledger Innovation, home"><img src="ledger-innovation-mark.svg" alt="" width="26" height="37">Ledger Innovation</a>
+    <a class="brand" href="#top" aria-label="Ledger Innovation, home"><svg viewBox="0 0 289.96 410.74" aria-hidden="true" focusable="false"><path class="mark-blue" d="M16.012 1.658L82.268 44.407A15.169 15.169 0 0 1 89.214 57.153L89.224 317.443A13.598 13.598 0 0 0 102.821 331.041L281.673 331.061A8.299 8.299 0 0 1 288.404 344.213L245.433 403.808A16.709 16.709 0 0 1 231.88 410.744L78.048 410.739A10.405 10.405 0 0 1 71.985 408.789L6.514 361.838A15.597 15.597 0 0 1 0.007 349.164L-0 10.383A10.383 10.383 0 0 1 16.012 1.658Z"/><path class="mark-ink" d="M146.841 103.903L217.814 61.777A7.746 7.746 0 0 1 229.513 68.441L229.437 249.642A15.111 15.111 0 0 1 222.116 262.584L149.72 306.133A6.283 6.283 0 0 1 140.198 300.749L140.2 115.568A13.565 13.565 0 0 1 146.841 103.903Z"/></svg>Ledger Innovation</a>
     <nav class="nav" aria-label="Sections">
       <a href="#work">Work</a>
       <a href="#capabilities">Capabilities</a>
@@ -267,7 +268,40 @@
   <div class="wrap">
     <span>&copy; 2026 Ledger Innovation MB. All rights reserved.</span>
     <span><a href="https://github.com/LedgerInnovation">GitHub</a> · <a href="mailto:info@ledgerinnovation.com">Email</a></span>
+    <div class="theme" role="group" aria-labelledby="theme-label">
+      <span id="theme-label">Theme</span>
+      <div class="theme-options">
+        <button type="button" id="theme-light" data-theme-choice="light" aria-pressed="false">Light</button>
+        <button type="button" id="theme-dark" data-theme-choice="dark" aria-pressed="false">Dark</button>
+        <button type="button" id="theme-system" data-theme-choice="system" aria-pressed="true">System</button>
+      </div>
+    </div>
   </div>
 </footer>
+<script>
+(function () {
+  var root = document.documentElement;
+  var buttons = document.querySelectorAll("[data-theme-choice]");
+  function current() {
+    var t = root.getAttribute("data-theme");
+    return t === "light" || t === "dark" ? t : "system";
+  }
+  function render() {
+    var c = current();
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].setAttribute("aria-pressed", buttons[i].getAttribute("data-theme-choice") === c ? "true" : "false");
+    }
+  }
+  function apply(choice) {
+    if (choice === "system") { root.removeAttribute("data-theme"); } else { root.setAttribute("data-theme", choice); }
+    try { if (choice === "system") { localStorage.removeItem("theme"); } else { localStorage.setItem("theme", choice); } } catch (e) {}
+    render();
+  }
+  for (var i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener("click", function () { apply(this.getAttribute("data-theme-choice")); });
+  }
+  render();
+})();
+</script>
 </body>
 </html>
