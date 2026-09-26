@@ -84,20 +84,20 @@
       <li>the amount is <code>EUR:</code> and digits with a point, never a comma</li>
       <li><code>receiver-name</code> is present and not blank</li>
       <li>no control characters, line breaks or bidirectional formatting characters in any value</li>
-      <li>an unknown option, a repeated option or an <code>instruction</code> refuses the link</li>
+      <li>an unknown option, a repeated option or an <code>instruction</code> refuses the link. The exceptions are <code>sender-name</code>, <code>receiver-postal-code</code> and <code>receiver-town</code>, which describe the parties rather than the payment and are ignored</li>
     </ul>
     <p>In JavaScript or TypeScript, including React Native, <a href="https://www.npmjs.com/package/@euvena/qr"><code>@euvena/qr</code></a> does this with <code>decodePaytoUri</code>. Kotlin and Swift versions are planned.</p>
 
     <h2 id="show">3. Show it before anything happens</h2>
     <ul>
       <li>Open the ordinary transfer form with the values filled in, showing the name, the full IBAN, the amount and the message.</li>
-      <li>Never skip a step of the usual authorisation because a transfer came from a link. Any app on the phone can open one.</li>
+      <li>Authorise exactly as for a transfer the payer typed in, with no step skipped. Any app on the phone can open a link.</li>
       <li>Run your usual checks, including Verification of Payee.</li>
       <li>Let the payer choose the account to pay from. The link never names it.</li>
     </ul>
 
     <h2 id="test-links">Test links</h2>
-    <p>Open this page on a phone with your build installed and tap each link. The account is the widely published example IBAN.</p>
+    <p>Open this page on a phone with your build installed and tap each link. The account is the widely published example IBAN, which may still belong to someone, so stop at the filled-in form and do not authorise. Use your own test account for an end-to-end run.</p>
     <ul class="tests">
       <li><a class="payto" href="payto://iban/DE89370400440532013000?amount=EUR:25.00&amp;receiver-name=Example%20Payee&amp;message=Invoice%202026-001">payto://iban/DE89370400440532013000?amount=EUR:25.00&amp;receiver-name=Example%20Payee&amp;message=Invoice%202026-001</a><span>Transfer form with name, IBAN, €25.00 and the message</span></li>
       <li><a class="payto" href="payto://iban/COBADEFFXXX/DE89370400440532013000?receiver-name=Example%20Payee">payto://iban/COBADEFFXXX/DE89370400440532013000?receiver-name=Example%20Payee</a><span>Form with the BIC and no amount: the payer enters it</span></li>
