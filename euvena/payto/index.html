@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>payto links for banking apps · Euvena</title>
+<meta name="description" content="How a banking app accepts payto://iban links for SEPA credit transfers, with test links to tap on a phone.">
+<meta name="theme-color" content="#2970E3">
+<link rel="canonical" href="https://ledgerinnovation.com/euvena/payto/">
+<link rel="icon" href="/ledger-innovation-mark.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ledger Innovation">
+<meta property="og:title" content="payto links for banking apps">
+<meta property="og:description" content="Let payers open a SEPA transfer in your app with one tap.">
+<meta property="og:url" content="https://ledgerinnovation.com/euvena/payto/">
+<meta property="og:image" content="https://ledgerinnovation.com/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<script>(function(){try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark"){document.documentElement.setAttribute("data-theme",t);}}catch(e){}})();</script>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<a class="skip" href="#top">Skip to content</a>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Ledger Innovation, home"><svg viewBox="0 0 289.96 410.74" width="26" height="37" aria-hidden="true" focusable="false"><path class="mark-blue" fill="#2970E3" d="M16.012 1.658L82.268 44.407A15.169 15.169 0 0 1 89.214 57.153L89.224 317.443A13.598 13.598 0 0 0 102.821 331.041L281.673 331.061A8.299 8.299 0 0 1 288.404 344.213L245.433 403.808A16.709 16.709 0 0 1 231.88 410.744L78.048 410.739A10.405 10.405 0 0 1 71.985 408.789L6.514 361.838A15.597 15.597 0 0 1 0.007 349.164L-0 10.383A10.383 10.383 0 0 1 16.012 1.658Z"/><path class="mark-ink" fill="currentColor" d="M146.841 103.903L217.814 61.777A7.746 7.746 0 0 1 229.513 68.441L229.437 249.642A15.111 15.111 0 0 1 222.116 262.584L149.72 306.133A6.283 6.283 0 0 1 140.198 300.749L140.2 115.568A13.565 13.565 0 0 1 146.841 103.903Z"/></svg>Ledger Innovation</a>
+    <nav class="nav" aria-label="Sections">
+      <a href="/#work">Work</a>
+      <a href="/#capabilities">Capabilities</a>
+      <a href="/#about">About</a>
+      <a href="/#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top" tabindex="-1">
+  <div class="section wrap">
+  <article class="doc">
+    <div class="eyebrow">Euvena</div>
+    <h1>payto links for banking apps</h1>
+    <p class="meta">For developers of banking apps · 26 September 2026</p>
+
+    <p>A payment request often reaches the payer on the phone they would pay with: an invoice in an email, a link in a chat, a QR code on a web page. The EPC QR code (&ldquo;GiroCode&rdquo;) needs a second device to scan it. On the same phone the payer copies the name, the IBAN, the amount and the reference into the banking app one by one.</p>
+    <p>A <code>payto://iban</code> link carries the same request as the code, in a form one app can hand to another. When your app accepts it, the payer taps the link and your transfer form opens filled in. The payer checks it and authorises it as usual. The scheme is RFC 8905; the <a href="https://github.com/LedgerInnovation/euvena/blob/main/docs/payto-handoff.md">payto handoff profile</a> fixes how a SEPA credit transfer is written and read.</p>
+
+    <h2 id="link">A link</h2>
+    <pre><code>payto://iban/DE89370400440532013000?amount=EUR:25.00&amp;receiver-name=Example%20Payee&amp;message=Invoice%202026-001</code></pre>
+    <ul>
+      <li><code>iban/[BIC/]IBAN</code>: the beneficiary's account, the BIC first when present</li>
+      <li><code>amount=EUR:25.00</code>: the amount in euro, absent when the payer decides it</li>
+      <li><code>receiver-name</code>: the beneficiary name, always present</li>
+      <li><code>message</code>: the unstructured remittance information, up to 140 characters</li>
+    </ul>
+
+    <h2 id="register">1. Register the scheme</h2>
+    <p>Android, on the activity that opens the transfer form:</p>
+    <pre><code>&lt;intent-filter&gt;
+  &lt;action android:name="android.intent.action.VIEW" /&gt;
+  &lt;category android:name="android.intent.category.DEFAULT" /&gt;
+  &lt;category android:name="android.intent.category.BROWSABLE" /&gt;
+  &lt;data android:scheme="payto" android:host="iban" /&gt;
+&lt;/intent-filter&gt;</code></pre>
+    <p>iOS, in <code>Info.plist</code>:</p>
+    <pre><code>&lt;key&gt;CFBundleURLTypes&lt;/key&gt;
+&lt;array&gt;
+  &lt;dict&gt;
+    &lt;key&gt;CFBundleURLName&lt;/key&gt;
+    &lt;string&gt;payto&lt;/string&gt;
+    &lt;key&gt;CFBundleURLSchemes&lt;/key&gt;
+    &lt;array&gt;&lt;string&gt;payto&lt;/string&gt;&lt;/array&gt;
+  &lt;/dict&gt;
+&lt;/array&gt;</code></pre>
+
+    <h2 id="read">2. Read it strictly</h2>
+    <p>Refuse the whole link when anything is wrong, and never fill in part of a transfer:</p>
+    <ul>
+      <li>the IBAN passes its check digits and the BIC, when present, its format</li>
+      <li>the amount is <code>EUR:</code> and digits with a point, never a comma</li>
+      <li><code>receiver-name</code> is present and not blank</li>
+      <li>no control characters, line breaks or bidirectional formatting characters in any value</li>
+      <li>an unknown option, a repeated option or an <code>instruction</code> refuses the link. The exceptions are <code>sender-name</code>, <code>receiver-postal-code</code> and <code>receiver-town</code>, which describe the parties rather than the payment and are ignored</li>
+    </ul>
+    <p>In JavaScript or TypeScript, including React Native, <a href="https://www.npmjs.com/package/@euvena/qr"><code>@euvena/qr</code></a> does this with <code>decodePaytoUri</code>. Kotlin and Swift versions are planned.</p>
+
+    <h2 id="show">3. Show it before anything happens</h2>
+    <ul>
+      <li>Open the ordinary transfer form with the values filled in, showing the name, the full IBAN, the amount and the message.</li>
+      <li>Authorise exactly as for a transfer the payer typed in, with no step skipped. Any app on the phone can open a link.</li>
+      <li>Run your usual checks, including Verification of Payee.</li>
+      <li>Let the payer choose the account to pay from. The link never names it.</li>
+    </ul>
+
+    <h2 id="test-links">Test links</h2>
+    <p>Open this page on a phone with your build installed and tap each link. The account is the widely published example IBAN, which may still belong to someone, so stop at the filled-in form and do not authorise. Use your own test account for an end-to-end run.</p>
+    <ul class="tests">
+      <li><a class="payto" href="payto://iban/DE89370400440532013000?amount=EUR:25.00&amp;receiver-name=Example%20Payee&amp;message=Invoice%202026-001">payto://iban/DE89370400440532013000?amount=EUR:25.00&amp;receiver-name=Example%20Payee&amp;message=Invoice%202026-001</a><span>Transfer form with name, IBAN, €25.00 and the message</span></li>
+      <li><a class="payto" href="payto://iban/COBADEFFXXX/DE89370400440532013000?receiver-name=Example%20Payee">payto://iban/COBADEFFXXX/DE89370400440532013000?receiver-name=Example%20Payee</a><span>Form with the BIC and no amount: the payer enters it</span></li>
+      <li><a class="payto" href="payto://iban/DE89370400440532013000?amount=EUR:12,50&amp;receiver-name=Example%20Payee">payto://iban/DE89370400440532013000?amount=EUR:12,50&amp;receiver-name=Example%20Payee</a><span>Refused: comma in the amount</span></li>
+      <li><a class="payto" href="payto://iban/DE89370400440532013001?receiver-name=Example%20Payee">payto://iban/DE89370400440532013001?receiver-name=Example%20Payee</a><span>Refused: IBAN check digits</span></li>
+      <li><a class="payto" href="payto://iban/DE89370400440532013000?receiver-name=Example%20Payee&amp;instruction=E2E-1">payto://iban/DE89370400440532013000?receiver-name=Example%20Payee&amp;instruction=E2E-1</a><span>Refused: end-to-end identifier</span></li>
+    </ul>
+
+    <h2 id="more">More</h2>
+    <p>The <a href="https://github.com/LedgerInnovation/euvena/blob/main/docs/for-banking-apps.md">full guide</a> and the <a href="https://github.com/LedgerInnovation/euvena">Euvena repository</a>, where the Euvena wallet emits these links. Questions and reports of apps that accept them are welcome in the <a href="https://github.com/LedgerInnovation/euvena/issues">issue tracker</a>.</p>
+  </article>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; 2026 Ledger Innovation MB. All rights reserved.</span>
+    <span><a href="https://github.com/LedgerInnovation">GitHub</a> · <a href="mailto:info@ledgerinnovation.com">Email</a></span>
+    <div class="theme" role="group" aria-labelledby="theme-label">
+      <span id="theme-label">Theme</span>
+      <div class="theme-options">
+        <button type="button" id="theme-light" data-theme-choice="light" aria-pressed="false">Light</button>
+        <button type="button" id="theme-dark" data-theme-choice="dark" aria-pressed="false">Dark</button>
+        <button type="button" id="theme-system" data-theme-choice="system" aria-pressed="true">System</button>
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  var root = document.documentElement;
+  var buttons = document.querySelectorAll("[data-theme-choice]");
+  function current() {
+    var t = root.getAttribute("data-theme");
+    return t === "light" || t === "dark" ? t : "system";
+  }
+  function render() {
+    var c = current();
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].setAttribute("aria-pressed", buttons[i].getAttribute("data-theme-choice") === c ? "true" : "false");
+    }
+  }
+  function apply(choice) {
+    if (choice === "system") { root.removeAttribute("data-theme"); } else { root.setAttribute("data-theme", choice); }
+    try { if (choice === "system") { localStorage.removeItem("theme"); } else { localStorage.setItem("theme", choice); } } catch (e) {}
+    render();
+  }
+  for (var i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener("click", function () { apply(this.getAttribute("data-theme-choice")); });
+  }
+  render();
+})();
+</script>
+</body>
+</html>
