@@ -141,6 +141,7 @@ p { margin: 0; }
 .cap p { color: var(--muted); font-size: 14.5px; margin-bottom: 14px; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .tags span { font-size: 13.5px; padding: 5px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); }
+.credit { color: var(--muted); font-size: 14px; margin-top: 32px; }
 
 /* About + contact */
 .about { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: start; }
